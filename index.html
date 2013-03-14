@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mesh Path Detection Model</title>
+    <script src="canvasclickcoords.js"></script>
+    <script src="meshpath.js"></script>
+  </head>
+  <body id="body" onload="__init__(1024, 768)">
+    <label for="node_count"><input name="node_count" id="node_count" /></label> <input type="button" onclick="create_nodes(document.getElementById('node_count').value); return 0;" value="Create Nodes" />
+    <div id="canvas_container">
+    </div>
+  </body>
+</html>
+
