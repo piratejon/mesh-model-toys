@@ -1,10 +1,11 @@
 
 var G;
 
-function Point (x, y)
+function Point (x, y, color)
 {
   this.x = x;
   this.y = y;
+  this.color = typeof color !== 'undefined' ? color : 'blue';
 
   this.squared_distance_from = function ( pt )
   {
@@ -19,8 +20,7 @@ function Point (x, y)
 
 function RandomIntRange ( lower_bound, upper_bound )
 {
-  var lol = Math.floor((Math.random() * (upper_bound - lower_bound + 1)) + lower_bound);
-  return lol;
+  return Math.floor((Math.random() * (upper_bound - lower_bound + 1)) + lower_bound);
 }
 
 function RandomPoint ( xrange, yrange )
@@ -70,7 +70,7 @@ function QuadTree(pt)
     }
     else
     {
-      // Duplicates not supported!
+      // Duplicates silently dropped!
     }
   }
 
@@ -121,7 +121,18 @@ function canvas_click ( e )
 {
   coords = G.canvas.relMouseCoords(e);
   closest_point = G.quadtree.nearest_neighbor ( new Point ( coords.x, coords.y ) );
-  alert(closest_point.qt.pt.x + ' ' + closest_point.qt.pt.y);
+
+  if ( closest_point.qt.pt.color == 'blue' )
+  {
+    closest_point.qt.pt.color = 'red';
+  }
+  else
+  {
+    closest_point.qt.pt.color = 'blue';
+  }
+
+  plot_point ( closest_point.qt.pt );
+
 }
 
 function create_canvas ( width, height )
@@ -150,7 +161,7 @@ function plot_point ( pt )
 {
   G.ctx.beginPath();
   G.ctx.arc(pt.x, pt.y, 3, 2*Math.PI, false);
-  G.ctx.fillStyle = 'blue';
+  G.ctx.fillStyle = pt.color;
   G.ctx.fill();
 }
 
