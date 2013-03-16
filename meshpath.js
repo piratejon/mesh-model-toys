@@ -17,6 +17,10 @@ var meshpath = (function () {
         this.distance_from = function (pt) {
             return Math.sqrt(this.squared_distance_from(pt));
         };
+
+        this.toString = function (pt) {
+            return '(' + pt.x + ',' + pt.y + ')';
+        };
     }
 
     function randomIntRange(lower_bound, upper_bound) {
@@ -144,23 +148,23 @@ var meshpath = (function () {
             G.src = null;
             closest_point.qt.pt.color = '#0000ff';
             G.src_node.innerHTML = '(none)';
-        } else if ( closest_point.qt.pt === G.dst ) {
+        } else if (closest_point.qt.pt === G.dst) {
             G.dst = null;
             closest_point.qt.pt.color = '#0000ff';
             G.dst_node.innerHTML = '(none)';
-        } else if ( null === G.src ) {
+        } else if (null === G.src) {
             G.src = closest_point.qt.pt;
             closest_point.qt.pt.color = '#00ff00';
-            G.src_node.innerHTML = '(' + G.src.x + ',' + G.src.y + ')';
-        } else if ( null === G.dst ) {
+            G.src_node.innerHTML = G.src.toString();
+        } else if (null === G.dst) {
             G.dst = closest_point.qt.pt;
             closest_point.qt.pt.color = '#ff0000';
-            G.dst_node.innerHTML = '(' + G.dst.x + ',' + G.dst.y + ')';
+            G.dst_node.innerHTML = G.dst.toString();
         } else {
             G.dst.color = '#0000ff';
             plot_point(G.dst);
             G.dst = closest_point.qt.pt;
-            G.dst_node.innerHTML = '(' + G.dst.x + ',' + G.dst.y + ')';
+            G.dst_node.innerHTML = G.dst.toString();
             closest_point.qt.pt.color = '#ff0000';
         }
 
