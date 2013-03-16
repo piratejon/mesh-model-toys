@@ -3,12 +3,16 @@
 var meshpath = (function () {
     "use strict";
 
-    var G;
+    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR;
+
+    NORMAL_COLOR = '#0000ff';
+    SOURCE_COLOR = '#00ff00';
+    DEST_COLOR   = '#ff0000';
 
     function Point(x, y, color) {
         this.x = x;
         this.y = y;
-        this.color = color === undefined ? '#0000ff' : 'color';
+        this.color = color === undefined ? NORMAL_COLOR : color;
 
         this.squared_distance_from = function (pt) {
             return ((x - pt.x) * (x - pt.x)) + ((y - pt.y) * (y - pt.y));
@@ -147,26 +151,26 @@ var meshpath = (function () {
 
             if (closest_point.qt.pt === G.src) {
                 G.src = null;
-                closest_point.qt.pt.color = '#0000ff';
+                closest_point.qt.pt.color = NORMAL_COLOR;
                 G.src_node.innerHTML = '(none)';
             } else if (closest_point.qt.pt === G.dst) {
                 G.dst = null;
-                closest_point.qt.pt.color = '#0000ff';
+                closest_point.qt.pt.color = NORMAL_COLOR;
                 G.dst_node.innerHTML = '(none)';
             } else if (null === G.src) {
                 G.src = closest_point.qt.pt;
-                closest_point.qt.pt.color = '#00ff00';
+                closest_point.qt.pt.color = SOURCE_COLOR;
                 G.src_node.innerHTML = G.src.toString();
             } else if (null === G.dst) {
                 G.dst = closest_point.qt.pt;
-                closest_point.qt.pt.color = '#ff0000';
+                closest_point.qt.pt.color = DEST_COLOR;
                 G.dst_node.innerHTML = G.dst.toString();
             } else {
-                G.dst.color = '#0000ff';
+                G.dst.color = NORMAL_COLOR;
                 plot_point(G.dst);
                 G.dst = closest_point.qt.pt;
                 G.dst_node.innerHTML = G.dst.toString();
-                closest_point.qt.pt.color = '#ff0000';
+                closest_point.qt.pt.color = DEST_COLOR;
             }
 
             plot_point(closest_point.qt.pt);
