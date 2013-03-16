@@ -139,36 +139,38 @@ var meshpath = (function () {
     }
 
     function canvas_click(e) {
-        var coords, closest_point;
+        if (G.quadtree) {
+            var coords, closest_point;
 
-        coords = G.canvas.relMouseCoords(e);
-        closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
+            coords = G.canvas.relMouseCoords(e);
+            closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
 
-        if (closest_point.qt.pt === G.src) {
-            G.src = null;
-            closest_point.qt.pt.color = '#0000ff';
-            G.src_node.innerHTML = '(none)';
-        } else if (closest_point.qt.pt === G.dst) {
-            G.dst = null;
-            closest_point.qt.pt.color = '#0000ff';
-            G.dst_node.innerHTML = '(none)';
-        } else if (null === G.src) {
-            G.src = closest_point.qt.pt;
-            closest_point.qt.pt.color = '#00ff00';
-            G.src_node.innerHTML = G.src.toString();
-        } else if (null === G.dst) {
-            G.dst = closest_point.qt.pt;
-            closest_point.qt.pt.color = '#ff0000';
-            G.dst_node.innerHTML = G.dst.toString();
-        } else {
-            G.dst.color = '#0000ff';
-            plot_point(G.dst);
-            G.dst = closest_point.qt.pt;
-            G.dst_node.innerHTML = G.dst.toString();
-            closest_point.qt.pt.color = '#ff0000';
+            if (closest_point.qt.pt === G.src) {
+                G.src = null;
+                closest_point.qt.pt.color = '#0000ff';
+                G.src_node.innerHTML = '(none)';
+            } else if (closest_point.qt.pt === G.dst) {
+                G.dst = null;
+                closest_point.qt.pt.color = '#0000ff';
+                G.dst_node.innerHTML = '(none)';
+            } else if (null === G.src) {
+                G.src = closest_point.qt.pt;
+                closest_point.qt.pt.color = '#00ff00';
+                G.src_node.innerHTML = G.src.toString();
+            } else if (null === G.dst) {
+                G.dst = closest_point.qt.pt;
+                closest_point.qt.pt.color = '#ff0000';
+                G.dst_node.innerHTML = G.dst.toString();
+            } else {
+                G.dst.color = '#0000ff';
+                plot_point(G.dst);
+                G.dst = closest_point.qt.pt;
+                G.dst_node.innerHTML = G.dst.toString();
+                closest_point.qt.pt.color = '#ff0000';
+            }
+
+            plot_point(closest_point.qt.pt);
         }
-
-        plot_point(closest_point.qt.pt);
     }
 
     function create_canvas(width, height) {
