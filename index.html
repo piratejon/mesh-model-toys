@@ -5,8 +5,8 @@
     <script src="canvasclickcoords.js"></script>
     <script src="meshpath.js"></script>
   </head>
-  <body id="body" onload="init(1024, 768)">
-    <label for="node_count"><input name="node_count" id="node_count" /></label> <input type="button" onclick="create_nodes(document.getElementById('node_count').value); return 0;" value="Create Nodes" />
+  <body id="body" onload="meshpath.init(1024,768)">
+    <label for="node_count"><input name="node_count" id="node_count" /></label> <input type="button" onclick="meshpath.create_nodes(document.getElementById('node_count').value); return 0;" value="Create Nodes" />
     <div id="canvas_container">
     </div>
   </body>

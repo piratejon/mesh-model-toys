@@ -1,5 +1,6 @@
 /*jslint browser:true */
-(function () {
+
+var meshpath = (function () {
     "use strict";
 
     var G;
@@ -67,6 +68,7 @@
                 }
             // } else {
                 // Duplicates silently dropped!
+                // Doug hates empty blocks!
             }
         };
 
@@ -188,4 +190,5 @@
         }
     }
 
+    return { 'init': init, 'create_nodes': create_nodes };
 }());
