@@ -8,7 +8,7 @@ var meshpath = (function () {
     function Point(x, y, color) {
         this.x = x;
         this.y = y;
-        this.color = color === undefined ? 'blue' : 'color';
+        this.color = color === undefined ? '#0000ff' : 'color';
 
         this.squared_distance_from = function (pt) {
             return ((x - pt.x) * (x - pt.x)) + ((y - pt.y) * (y - pt.y));
@@ -140,10 +140,28 @@ var meshpath = (function () {
         coords = G.canvas.relMouseCoords(e);
         closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
 
-        if (closest_point.qt.pt.color === 'blue') {
-            closest_point.qt.pt.color = 'red';
+        if (closest_point.qt.pt === G.src) {
+            G.src = null;
+            closest_point.qt.pt.color = '#0000ff';
+            G.src_node.innerHTML = '(none)';
+        } else if ( closest_point.qt.pt === G.dst ) {
+            G.dst = null;
+            closest_point.qt.pt.color = '#0000ff';
+            G.dst_node.innerHTML = '(none)';
+        } else if ( null === G.src ) {
+            G.src = closest_point.qt.pt;
+            closest_point.qt.pt.color = '#00ff00';
+            G.src_node.innerHTML = '(' + G.src.x + ',' + G.src.y + ')';
+        } else if ( null === G.dst ) {
+            G.dst = closest_point.qt.pt;
+            closest_point.qt.pt.color = '#ff0000';
+            G.dst_node.innerHTML = '(' + G.dst.x + ',' + G.dst.y + ')';
         } else {
-            closest_point.qt.pt.color = 'blue';
+            G.dst.color = '#0000ff';
+            plot_point(G.dst);
+            G.dst = closest_point.qt.pt;
+            G.dst_node.innerHTML = '(' + G.dst.x + ',' + G.dst.y + ')';
+            closest_point.qt.pt.color = '#ff0000';
         }
 
         plot_point(closest_point.qt.pt);
@@ -167,6 +185,9 @@ var meshpath = (function () {
         document.getElementById('canvas_container').appendChild(G.canvas);
         G.quadtree = null;
         G.pixel = G.ctx.createImageData(1, 1).data;
+        G.src = G.dst = null;
+        G.src_node = document.getElementById('src');
+        G.dst_node = document.getElementById('dst');
     }
 
     function draw_quadtree(qt) {
@@ -190,5 +211,8 @@ var meshpath = (function () {
         }
     }
 
-    return { 'init': init, 'create_nodes': create_nodes };
+    function wagumba() {
+    }
+
+    return { 'init': init, 'create_nodes': create_nodes, 'wagumba': wagumba };
 }());
