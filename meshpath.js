@@ -18,8 +18,8 @@ var meshpath = (function () {
             return Math.sqrt(this.squared_distance_from(pt));
         };
 
-        this.toString = function (pt) {
-            return '(' + pt.x + ',' + pt.y + ')';
+        this.toString = function () {
+            return '(' + this.x + ',' + this.y + ')';
         };
     }
 
