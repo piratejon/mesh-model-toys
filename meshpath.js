@@ -133,6 +133,14 @@ var meshpath = (function () {
 
             return min;
         };
+
+        this.get_neighbors_in_radius = function (radius) {
+            var radius_neighbors = [];
+
+            // if ( this.
+
+            return radius_neighbors;
+        };
     }
 
     function plot_point(pt) {
@@ -149,28 +157,28 @@ var meshpath = (function () {
             coords = G.canvas.relMouseCoords(e);
             closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
 
-            if (closest_point.qt.pt === G.src) {
+            if (closest_point.qt === G.src) {
                 G.src = null;
                 closest_point.qt.pt.color = NORMAL_COLOR;
                 G.src_node.innerHTML = '(none)';
-            } else if (closest_point.qt.pt === G.dst) {
+            } else if (closest_point.qt === G.dst) {
                 G.dst = null;
                 closest_point.qt.pt.color = NORMAL_COLOR;
                 G.dst_node.innerHTML = '(none)';
             } else if (null === G.src) {
-                G.src = closest_point.qt.pt;
-                closest_point.qt.pt.color = SOURCE_COLOR;
-                G.src_node.innerHTML = G.src.toString();
+                G.src = closest_point.qt;
+                G.src.pt.color = SOURCE_COLOR;
+                G.src_node.innerHTML = G.src.pt.toString();
             } else if (null === G.dst) {
-                G.dst = closest_point.qt.pt;
-                closest_point.qt.pt.color = DEST_COLOR;
-                G.dst_node.innerHTML = G.dst.toString();
+                G.dst = closest_point.qt;
+                G.dst.pt.color = DEST_COLOR;
+                G.dst_node.innerHTML = G.dst.pt.toString();
             } else {
-                G.dst.color = NORMAL_COLOR;
-                plot_point(G.dst);
-                G.dst = closest_point.qt.pt;
-                G.dst_node.innerHTML = G.dst.toString();
-                closest_point.qt.pt.color = DEST_COLOR;
+                G.dst.pt.color = NORMAL_COLOR;
+                plot_point(G.dst.pt);
+                G.dst = closest_point.qt;
+                G.dst_node.innerHTML = G.dst.pt.toString();
+                G.dst.pt.color = DEST_COLOR;
             }
 
             plot_point(closest_point.qt.pt);
