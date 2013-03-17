@@ -3,18 +3,19 @@
 var meshpath = (function () {
     "use strict";
 
-    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR, NEIGHBOR_COLOR;
+    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR, NEIGHBOR_COLOR, DEFAULT_RADIUS;
 
     NORMAL_COLOR = '#0000ff';
     SOURCE_COLOR = '#00ff00';
     DEST_COLOR   = '#ff0000';
     NEIGHBOR_COLOR = '#ff8000';
+    DEFAULT_RADIUS = 25;
 
     function Point(x, y, color, radius) {
         this.x = x;
         this.y = y;
         this.color = color === undefined ? NORMAL_COLOR : color;
-        this.radius = radius === undefined ? 20 : radius;
+        this.radius = radius === undefined ? DEFAULT_RADIUS : radius;
 
         this.squared_distance_from = function (pt) {
             return ((x - pt.x) * (x - pt.x)) + ((y - pt.y) * (y - pt.y));
