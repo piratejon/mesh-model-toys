@@ -12,9 +12,9 @@ I learned/used-for-the-first-time the following in this project:
 
 Attribution
 ===========
-Includes code based on content found at StackOverflow.com:
-* canvasclickcoords.js
-* guid.js
+Licensed non-original code is reproduced and distributed here. See individual files for complete attribution information:
+* canvasclickcoords.js (http://stackoverflow.com/a/5932203)
+* guid.js (http://stackoverflow.com/a/2117523)
 
 License
 =======

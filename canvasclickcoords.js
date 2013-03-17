@@ -1,8 +1,8 @@
 
 /***
-From "How do I get the coordinates of a mouse click on a canvas element?" <http://stackoverflow.com/a/5932203> accessed 14 March 2013 at 00:07 CDT
+From "How do I get the coordinates of a mouse click on a canvas element?" <http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element> accessed 14 March 2013 at 00:07 CDT
 Question by: StackOverflow user "Tom" <http://stackoverflow.com/users/3715/tom>
-Answer by: StackOverflow user "Ryan Artecona" <http://stackoverflow.com/users/671915/ryan-artecona>
+Answer <http://stackoverflow.com/a/5932203> by: StackOverflow user "Ryan Artecona" <http://stackoverflow.com/users/671915/ryan-artecona>
 Attributed in accordance with <http://stackoverflow.com/questions/4530182/using-code-from-this-site> as accessed 14 March 2013 at 00:13 CDT
   ***/
 function relMouseCoords(event){
