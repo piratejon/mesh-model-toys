@@ -46,6 +46,12 @@ var meshpath = (function () {
 
         this.pt = pt;
 
+        this.guid = guid();
+
+        this.toString = function () {
+            return this.pt.toString() + ':' + this.guid;
+        };
+
         this.insert = function (pt) {
             if (this.pt.squared_distance_from(pt) !== 0) {
                 if (pt.x > this.pt.x) {
@@ -136,6 +142,11 @@ var meshpath = (function () {
 
             return min;
         };
+
+        this.receive = function (packet) {
+          // This is called when somebody else sends us a packet.
+          // No assumptions. Do your own link-layer authentication =)
+        };
     }
 
     function get_neighbors_in_radius(qt, pt, radius) {
@@ -192,19 +203,19 @@ var meshpath = (function () {
                 G.src = closest_point.qt;
                 highlight_neighbors(G.src.pt, NEIGHBOR_COLOR);
                 G.src.pt.color = SOURCE_COLOR;
-                G.src_node.innerHTML = G.src.pt.toString();
+                G.src_node.innerHTML = G.src.toString();
             } else if (null === G.dst) {
                 G.dst = closest_point.qt;
                 highlight_neighbors(G.dst.pt, NEIGHBOR_COLOR);
                 G.dst.pt.color = DEST_COLOR;
-                G.dst_node.innerHTML = G.dst.pt.toString();
+                G.dst_node.innerHTML = G.dst.toString();
             } else {
                 G.dst.pt.color = NORMAL_COLOR;
                 highlight_neighbors(G.dst.pt, NORMAL_COLOR);
                 plot_point(G.dst.pt);
                 G.dst = closest_point.qt;
                 highlight_neighbors(G.dst.pt, NEIGHBOR_COLOR);
-                G.dst_node.innerHTML = G.dst.pt.toString();
+                G.dst_node.innerHTML = G.dst.toString();
                 G.dst.pt.color = DEST_COLOR;
             }
 
@@ -257,6 +268,10 @@ var meshpath = (function () {
     }
 
     function wagumba() {
+    }
+
+    function broadcast_to_neighbors(qt_src, packet) {
+      // send to someone by calling their receive method, lol
     }
 
     return { 'init': init, 'create_nodes': create_nodes, 'wagumba': wagumba };
