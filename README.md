@@ -12,7 +12,12 @@ I learned/used-for-the-first-time the following in this project:
 
 Attribution
 ===========
-Includes code from StackOverflow.com. See canvasclickcoords.js for full attribution.
+Includes code based on content found at StackOverflow.com:
+* canvasclickcoords.js
+* guid.js
+
+License
+=======
 All original code is MIT licensed (see LICENSE in repository root)
 
 Codename
