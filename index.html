@@ -4,13 +4,19 @@
     <title>Mesh Path Detection Model</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="canvasclickcoords.js"></script>
+    <script src="guid.js"></script>
     <script src="meshpath.js"></script>
   </head>
   <body id="body" onload="meshpath.init(512,512)">
     <label for="node_count"><input name="node_count" id="node_count" /></label> <input type="button" onclick="meshpath.create_nodes(document.getElementById('node_count').value); return 0;" value="Create Nodes" /> <input type="button" onclick="meshpath.wagumba(); return 0;" value="Find a Path" />
     <p>Click near nodes to set or unset the source or destination node.
     <ul id="vars"><li>Src: <span id="src">(none)</span><li>Dst: <span id="dst">(none)</span></ul>
-    <div id="canvas_container">
+    <div id="wtf">
+      <div id="canvas_container">
+      </div>
+      <div id="logging">
+        <textarea></textarea>
+      </div>
     </div>
   </body>
 </html>
