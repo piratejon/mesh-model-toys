@@ -12,13 +12,13 @@ I learned/used-for-the-first-time the following in this project:
 
 Attribution
 ===========
-Licensed non-original code is reproduced and distributed here. See individual files for complete attribution information:
+Non-original code is reproduced in and distributed as part of this repository. See individual files for complete attribution information:
 * canvasclickcoords.js (http://stackoverflow.com/a/5932203)
 * guid.js (http://stackoverflow.com/a/2117523)
 
 License
 =======
-All original code is MIT licensed (see LICENSE in repository root)
+All original code in this repository is MIT licensed. See LICENSE in repository root.
 
 Codename
 ========
