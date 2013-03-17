@@ -3,16 +3,18 @@
 var meshpath = (function () {
     "use strict";
 
-    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR;
+    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR, NEIGHBOR_COLOR;
 
     NORMAL_COLOR = '#0000ff';
     SOURCE_COLOR = '#00ff00';
     DEST_COLOR   = '#ff0000';
+    NEIGHBOR_COLOR = '#ff8000';
 
-    function Point(x, y, color) {
+    function Point(x, y, color, radius) {
         this.x = x;
         this.y = y;
         this.color = color === undefined ? NORMAL_COLOR : color;
+        this.radius = radius === undefined ? 20 : radius;
 
         this.squared_distance_from = function (pt) {
             return ((x - pt.x) * (x - pt.x)) + ((y - pt.y) * (y - pt.y));
@@ -94,7 +96,7 @@ var meshpath = (function () {
                 this.SE.depth_first_traversal(fn);
             }
             if (this.pt) {
-                fn(this.pt);
+                return fn(this.pt);
             }
         };
 
@@ -133,14 +135,23 @@ var meshpath = (function () {
 
             return min;
         };
+    }
 
-        this.get_neighbors_in_radius = function (radius) {
-            var radius_neighbors = [];
+    function get_neighbors_in_radius(qt, pt, radius) {
+        var neighborhood = [];
 
-            // if ( this.
+        if (qt) {
+            if (qt.pt.squared_distance_from(pt) < radius * radius) {
+                neighborhood.push(qt);
+            }
 
-            return radius_neighbors;
-        };
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NW, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NE, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SW, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SE, pt, radius));
+        }
+
+        return neighborhood;
     }
 
     function plot_point(pt) {
@@ -148,6 +159,15 @@ var meshpath = (function () {
         G.ctx.arc(pt.x, pt.y, 3, 2 * Math.PI, false);
         G.ctx.fillStyle = pt.color;
         G.ctx.fill();
+    }
+
+    function highlight_neighbors(pt, color, radius) {
+        var neighbors, i;
+        neighbors = get_neighbors_in_radius(G.quadtree, pt, radius === undefined ? pt.radius : radius);
+        for (i = 0; i < neighbors.length; i += 1) {
+            neighbors[i].pt.color = color === undefined ? NEIGHBOR_COLOR : color;
+            plot_point(neighbors[i].pt);
+        }
     }
 
     function canvas_click(e) {
@@ -158,25 +178,31 @@ var meshpath = (function () {
             closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
 
             if (closest_point.qt === G.src) {
+                highlight_neighbors(G.src.pt, NORMAL_COLOR);
                 G.src = null;
                 closest_point.qt.pt.color = NORMAL_COLOR;
                 G.src_node.innerHTML = '(none)';
             } else if (closest_point.qt === G.dst) {
+                highlight_neighbors(G.dst.pt, NORMAL_COLOR);
                 G.dst = null;
                 closest_point.qt.pt.color = NORMAL_COLOR;
                 G.dst_node.innerHTML = '(none)';
             } else if (null === G.src) {
                 G.src = closest_point.qt;
+                highlight_neighbors(G.src.pt, NEIGHBOR_COLOR);
                 G.src.pt.color = SOURCE_COLOR;
                 G.src_node.innerHTML = G.src.pt.toString();
             } else if (null === G.dst) {
                 G.dst = closest_point.qt;
+                highlight_neighbors(G.dst.pt, NEIGHBOR_COLOR);
                 G.dst.pt.color = DEST_COLOR;
                 G.dst_node.innerHTML = G.dst.pt.toString();
             } else {
                 G.dst.pt.color = NORMAL_COLOR;
+                highlight_neighbors(G.dst.pt, NORMAL_COLOR);
                 plot_point(G.dst.pt);
                 G.dst = closest_point.qt;
+                highlight_neighbors(G.dst.pt, NEIGHBOR_COLOR);
                 G.dst_node.innerHTML = G.dst.pt.toString();
                 G.dst.pt.color = DEST_COLOR;
             }
