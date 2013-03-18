@@ -1,4 +1,5 @@
 /*jslint browser:true */
+/*global guid*/
 
 var meshpath = (function () {
     "use strict";
@@ -10,6 +11,11 @@ var meshpath = (function () {
     DEST_COLOR   = '#ff0000';
     NEIGHBOR_COLOR = '#ff8000';
     DEFAULT_RADIUS = 25;
+
+    function ReceiveEvent(dst, packet) {
+        this.dst = dst;
+        this.packet = packet;
+    }
 
     function Point(x, y, color, radius) {
         this.x = x;
@@ -244,6 +250,7 @@ var meshpath = (function () {
         G.src = G.dst = null;
         G.src_node = document.getElementById('src');
         G.dst_node = document.getElementById('dst');
+        G.receive_queue = [];
     }
 
     function draw_quadtree(qt) {
@@ -268,10 +275,22 @@ var meshpath = (function () {
     }
 
     function wagumba() {
+        if (G.src) {
+            broadcast_to_neighbors(G.src, packet);
+        }
     }
 
     function broadcast_to_neighbors(qt_src, packet) {
-      // send to someone by calling their receive method, lol
+        // put a receive event for this packet to each neighbor in the queue
+        var i, neighbors;
+        neighbors = get_neighbors_in_radius(G.quadtree, qt_src.pt, qt_src.pt.radius);
+        for (i=0; i < qt_src.length; i += 1) {
+            if (qt_src !== neighbors[i]) {
+                G.receive_queue.push(new ReceiveEvent(neighbors[i], packet));
+            }
+        }
+
+        // G.work
     }
 
     return { 'init': init, 'create_nodes': create_nodes, 'wagumba': wagumba };
