@@ -5,7 +5,7 @@
   min-width: 500px;
 }
 
-#logging {
+#router {
   display: table-cell;
   width: 100%;
   vertical-align: top;
@@ -13,9 +13,22 @@
   padding-left: 0.5em;
 }
 
-#logging textarea {
+#router textarea {
   position: relative;
   width: 99%;
   height: 30em;
+}
+
+#logging {
+}
+
+#innerlogging {
+  position: relative;
+}
+
+#logtome {
+  position: absolute;
+  width: 100%;
+  height: 15em;
 }
 
