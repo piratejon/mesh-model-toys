@@ -22,6 +22,7 @@ var meshpath = (function () {
         this.y = y;
         this.color = color === undefined ? NORMAL_COLOR : color;
         this.radius = radius === undefined ? DEFAULT_RADIUS : radius;
+        this.guid = guid();
 
         this.squared_distance_from = function (pt) {
             return ((x - pt.x) * (x - pt.x)) + ((y - pt.y) * (y - pt.y));
@@ -34,6 +35,9 @@ var meshpath = (function () {
         this.toString = function () {
             return '(' + this.x + ',' + this.y + ')';
         };
+
+        this.initiate = function(dst_guid) {
+        }
     }
 
     function randomIntRange(lower_bound, upper_bound) {
@@ -52,10 +56,8 @@ var meshpath = (function () {
 
         this.pt = pt;
 
-        this.guid = guid();
-
         this.toString = function () {
-            return this.pt.toString() + ':' + this.guid;
+            return this.pt.toString() + ':' + this.pt.guid;
         };
 
         this.insert = function (pt) {
@@ -250,7 +252,6 @@ var meshpath = (function () {
         G.src = G.dst = null;
         G.src_node = document.getElementById('src');
         G.dst_node = document.getElementById('dst');
-        G.receive_queue = [];
     }
 
     function draw_quadtree(qt) {
@@ -274,23 +275,33 @@ var meshpath = (function () {
         }
     }
 
-    function wagumba() {
-        if (G.src) {
-            broadcast_to_neighbors(G.src, packet);
-        }
-    }
-
     function broadcast_to_neighbors(qt_src, packet) {
-        // put a receive event for this packet to each neighbor in the queue
-        var i, neighbors;
+        var i, neighbors, event_queue;
+        event_queue = [];
         neighbors = get_neighbors_in_radius(G.quadtree, qt_src.pt, qt_src.pt.radius);
         for (i=0; i < qt_src.length; i += 1) {
             if (qt_src !== neighbors[i]) {
-                G.receive_queue.push(new ReceiveEvent(neighbors[i], packet));
+                event_queue.push(new ReceiveEvent(neighbors[i], packet));
             }
         }
 
-        // G.work
+        return event_queue;
+    }
+
+    function wagumba() {
+        if (G.src) {
+            var current_events, new_events, i;
+
+            current_events = broadcast_to_neighbors(G.src, packet);
+
+            while ( current_events.length > 0 ) {
+                new_events = [];
+                for (i=0; i < current_events.length; i += 1) {
+                    new_events.push.apply(new_events, receive(current_events[i]));
+                }
+                current_events = new_events;
+            }
+        }
     }
 
     return { 'init': init, 'create_nodes': create_nodes, 'wagumba': wagumba };

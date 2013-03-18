@@ -15,8 +15,11 @@
       <div id="canvas_container">
       </div>
       <div id="router">
-        Write two functions here: <em>initiate(packet)</em> and <em>receive(packet)</em>. <em>initiate</em> is run by the source node when you click Find a Path. <em>receive</em> is run when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. <em>packet</em> is defined according to your imagination/routing protocol. <em>packet.src</em> is automatically filled in with the sending node's GUID.
-        <textarea id="evalme">function initiate(packet) {
+        Write two functions here: <em>initiate(dst_guid)</em> and <em>receive(recipient_guid, packet)</em>. <em>initiate</em> is called in the context of the source node (with guid <em>this.guid</em>) when you click Find a Path. <em>receive</em> is called when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. Define <em>packet</em> according to your imagination.
+        <textarea id="evalme">function initiate(dst_guid) {
+    packet = new Packet();
+    packet.src = this.guid;
+    broadcast(packet);
 }
 
 function receive(packet) {
