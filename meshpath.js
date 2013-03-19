@@ -35,9 +35,6 @@ var meshpath = (function () {
         this.toString = function () {
             return '(' + this.x + ',' + this.y + ')';
         };
-
-        this.initiate = function(dst_guid) {
-        }
     }
 
     function randomIntRange(lower_bound, upper_bound) {
@@ -275,11 +272,18 @@ var meshpath = (function () {
         }
     }
 
+    function wagumba() {
+        if (G.src && G.dst) {
+            eval(document.getElementById('evalme').value);
+            G.src.pt.initiate(G.dst.pt.guid);
+        }
+    }
+
     function broadcast_to_neighbors(qt_src, packet) {
         var i, neighbors, event_queue;
         event_queue = [];
         neighbors = get_neighbors_in_radius(G.quadtree, qt_src.pt, qt_src.pt.radius);
-        for (i=0; i < qt_src.length; i += 1) {
+        for (i = 0; i < qt_src.length; i += 1) {
             if (qt_src !== neighbors[i]) {
                 event_queue.push(new ReceiveEvent(neighbors[i], packet));
             }
@@ -288,16 +292,16 @@ var meshpath = (function () {
         return event_queue;
     }
 
-    function wagumba() {
+    function wagumba2() {
         if (G.src) {
             var current_events, new_events, i;
 
-            current_events = broadcast_to_neighbors(G.src, packet);
+            // current_events = broadcast_to_neighbors(G.src, packet);
 
-            while ( current_events.length > 0 ) {
+            while (current_events.length > 0) {
                 new_events = [];
-                for (i=0; i < current_events.length; i += 1) {
-                    new_events.push.apply(new_events, receive(current_events[i]));
+                for (i = 0; i < current_events.length; i += 1) {
+                    new_events.push.apply(new_events, current_events[i].dst.receive(current_events[i].packet));
                 }
                 current_events = new_events;
             }
