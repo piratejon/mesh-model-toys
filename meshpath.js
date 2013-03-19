@@ -45,6 +45,27 @@ var meshpath = (function () {
         return new Point(randomIntRange(0, xrange), randomIntRange(0, yrange));
     }
 
+    function get_neighbors_in_radius(qt, pt, radius) {
+        var neighborhood = [];
+
+        if (qt) {
+            if (qt.pt.squared_distance_from(pt) < radius * radius) {
+                neighborhood.push(qt);
+            }
+
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NW, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NE, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SW, pt, radius));
+            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SE, pt, radius));
+        }
+
+        return neighborhood;
+    }
+
+    function get_neighbors(qt, pt) {
+        return get_neighbors_in_radius(qt, pt, pt.radius);
+    }
+
     function QuadTree(pt) {
         this.NW = null;
         this.NE = null;
@@ -52,6 +73,7 @@ var meshpath = (function () {
         this.SE = null;
 
         this.pt = pt;
+        pt.qt = this;
 
         this.toString = function () {
             return this.pt.toString() + ':' + this.pt.guid;
@@ -148,27 +170,18 @@ var meshpath = (function () {
             return min;
         };
 
-        this.receive = function (packet) {
-          // This is called when somebody else sends us a packet.
-          // No assumptions. Do your own link-layer authentication =)
-        };
-    }
-
-    function get_neighbors_in_radius(qt, pt, radius) {
-        var neighborhood = [];
-
-        if (qt) {
-            if (qt.pt.squared_distance_from(pt) < radius * radius) {
-                neighborhood.push(qt);
+        this.broadcast = function (packet) {
+            var i, neighbors, event_queue;
+            event_queue = [];
+            neighbors = get_neighbors(G.quadtree, this.pt);
+            for (i = 0; i < neighbors.length; i += 1) {
+                if (this !== neighbors[i]) {
+                    event_queue.push(new ReceiveEvent(neighbors[i], packet));
+                }
             }
 
-            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NW, pt, radius));
-            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.NE, pt, radius));
-            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SW, pt, radius));
-            neighborhood.push.apply(neighborhood, get_neighbors_in_radius(qt.SE, pt, radius));
-        }
-
-        return neighborhood;
+            return event_queue;
+        };
     }
 
     function plot_point(pt) {
@@ -274,34 +287,14 @@ var meshpath = (function () {
 
     function wagumba() {
         if (G.src && G.dst) {
+            var packet, current_events, new_events, i;
             eval(document.getElementById('evalme').value);
-            G.src.pt.initiate(G.dst.pt.guid);
-        }
-    }
-
-    function broadcast_to_neighbors(qt_src, packet) {
-        var i, neighbors, event_queue;
-        event_queue = [];
-        neighbors = get_neighbors_in_radius(G.quadtree, qt_src.pt, qt_src.pt.radius);
-        for (i = 0; i < qt_src.length; i += 1) {
-            if (qt_src !== neighbors[i]) {
-                event_queue.push(new ReceiveEvent(neighbors[i], packet));
-            }
-        }
-
-        return event_queue;
-    }
-
-    function wagumba2() {
-        if (G.src) {
-            var current_events, new_events, i;
-
-            // current_events = broadcast_to_neighbors(G.src, packet);
-
+            packet = G.src.pt.initiate(G.dst.pt.guid);
+            current_events = G.src.broadcast(packet);
             while (current_events.length > 0) {
                 new_events = [];
                 for (i = 0; i < current_events.length; i += 1) {
-                    new_events.push.apply(new_events, current_events[i].dst.receive(current_events[i].packet));
+                    new_events.push.apply(new_events, current_events[i].dst.pt.receive(current_events[i].packet));
                 }
                 current_events = new_events;
             }
