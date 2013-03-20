@@ -16,25 +16,35 @@
       <div id="canvas_container">
       </div>
       <div id="router">
-        Define two functions here: <em>Point.initiate(dst_guid)</em> and <em>Point.receive(recipient_guid, packet)</em>. <em>initiate</em> is called in the context of the source node (with guid <em>this.guid</em>) when you click Find a Path. <em>receive</em> is called when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. Define <em>packet</em> according to your imagination.
-        <textarea id="evalme">Point.prototype.initiate = function(dst_guid) {
-    var packet = {};
+        Here, define a <em>Packet</em> class with whatever fields you want and including a <em>copy</em> member. Additionally define <em>initiate(dst_guid)</em> and <em>receive(packet)</em> in the <em>Node</em> prototype.
+        Define two functions here: <em>Node.initiate(dst_guid)</em> and <em>Node.receive(recipient_guid, packet)</em>. <em>initiate</em> is called in the context of the source node (with guid <em>this.guid</em>) when you click Find a Path. <em>receive</em> is called when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. Define <em>packet</em> according to your imagination.
+        <textarea id="evalme">var Packet = function () {
+    this.copy = function () {
+        var new_packet = new Packet();
+        new_packet.src = this.src;
+        new_packet.dst = this.dst;
+        new_packet.route = this.route.slice(0);
+        return new_packet;
+    };
+};
+
+Node.prototype.initiate = function(dst_guid) {
+    var packet = new Packet();
     packet.src = this.guid;
     packet.dst = dst_guid;
-    // packet.route = [];
-    // packet.route.push(this.guid);
-    packet.route_length = 0;
+    packet.route = [];
+    packet.route.push(this.guid);
     return packet;
 };
 
-Point.prototype.receive = function(packet) {
+Node.prototype.receive = function(packet) {
     if (this.guid === packet.dst) {
-        console.log("FOUND ME!!! Route:" + packet.route_length);
+        packet.route.push(this.guid);
+        console.log("FOUND ME!!! Route:" + packet.route + "\n");
         return [];
-    } else if (this.shortest_route === undefined || packet.route_length &lt; this.shortest_route) {
-        // packet.route.push(this.guid);
-        packet.route_length += 1;
-        this.shortest_route = packet.route_length;
+    } else if (this.shortest_route === undefined || packet.route.length &lt; this.shortest_route) {
+        packet.route.push(this.guid);
+        this.shortest_route = packet.route.length;
         return this.qt.broadcast(packet);
     } else {
         return [];

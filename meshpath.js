@@ -17,7 +17,7 @@ var meshpath = (function () {
         this.packet = packet;
     }
 
-    function Point(x, y, color, radius) {
+    function Node(x, y, color, radius) {
         this.x = x;
         this.y = y;
         this.color = color === undefined ? NORMAL_COLOR : color;
@@ -45,8 +45,8 @@ var meshpath = (function () {
         return Math.floor((Math.random() * (upper_bound - lower_bound + 1)) + lower_bound);
     }
 
-    function randomPoint(xrange, yrange) {
-        return new Point(randomIntRange(0, xrange), randomIntRange(0, yrange));
+    function randomNode(xrange, yrange) {
+        return new Node(randomIntRange(0, xrange), randomIntRange(0, yrange));
     }
 
     function get_neighbors_in_radius(qt, pt, radius) {
@@ -209,7 +209,7 @@ var meshpath = (function () {
             var coords, closest_point;
 
             coords = G.canvas.relMouseCoords(e);
-            closest_point = G.quadtree.nearest_neighbor(new Point(coords.x, coords.y));
+            closest_point = G.quadtree.nearest_neighbor(new Node(coords.x, coords.y));
 
             if (closest_point.qt === G.src) {
                 highlight_neighbors(G.src.pt, NORMAL_COLOR);
@@ -276,12 +276,12 @@ var meshpath = (function () {
         var i = 0;
 
         if (!G.quadtree && count > 0) {
-            G.quadtree = new QuadTree(randomPoint(G.width, G.height));
+            G.quadtree = new QuadTree(randomNode(G.width, G.height));
             i = 1;
         }
 
         for (i; i < count; i += 1) {
-            G.quadtree.insert(randomPoint(G.width, G.height));
+            G.quadtree.insert(randomNode(G.width, G.height));
         }
 
         if (G.quadtree) {
