@@ -30,7 +30,7 @@ Point.prototype.receive = function(packet) {
     if (this.guid === packet.dst) {
         console.log("FOUND ME!!! Route:" + packet.route_length);
         return [];
-    } else if (this.shortest_route === undefined || packet.route_length < this.shortest_route) {
+    } else if (this.shortest_route === undefined || packet.route_length &lt; this.shortest_route) {
         // packet.route.push(this.guid);
         packet.route_length += 1;
         this.shortest_route = packet.route_length;
