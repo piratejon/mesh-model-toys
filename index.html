@@ -16,8 +16,7 @@
       <div id="canvas_container">
       </div>
       <div id="router">
-        Here, define a <em>Packet</em> class with whatever fields you want and including a <em>copy</em> member. Additionally define <em>initiate(dst_guid)</em> and <em>receive(packet)</em> in the <em>Node</em> prototype.
-        Define two functions here: <em>Node.initiate(dst_guid)</em> and <em>Node.receive(recipient_guid, packet)</em>. <em>initiate</em> is called in the context of the source node (with guid <em>this.guid</em>) when you click Find a Path. <em>receive</em> is called when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. Define <em>packet</em> according to your imagination.
+        Define a <em>Packet</em> class with whatever fields you want and including a <em>copy</em> member. Additionally define callbacks <em>initiate(dst_guid)</em> and <em>receive(packet)</em> on <em>Node.prototype</em>. <em>initiate</em> runs in the context of the source node when Find a Path is clicked and is responsible for creating and returning a <em>Packet</em> object which will be broadcast to nodes within range. The <em>dst_guid</em> parameter is a string representing the unique address of the destination node &mdash; not a handle to the node object &mdash; meant to be used in constructing the packet. <em>receive</em> is called in the context of a node receiving a broadcast packet. The <em>packet</em> parameter is a <em>copy</em> of the received <em>Packet</em> object and can be modified in place and rebroadcast, rebroadcast without modification, or dropped. <em>receive</em> should return an empty list if the node is not going to do anything with the packet, or if it wants to broadcast in response to it can make any necessary changes (without needing to <em>copy</em> first) and then return the result of <em>this.broadcast(packet)</em>. A simple example is supplied below:
         <textarea id="evalme">var Packet = function () {
     this.copy = function () {
         var new_packet = new Packet();
@@ -45,7 +44,7 @@ Node.prototype.receive = function(packet) {
     } else if (this.shortest_route === undefined || packet.route.length &lt; this.shortest_route) {
         packet.route.push(this.guid);
         this.shortest_route = packet.route.length;
-        return this.qt.broadcast(packet);
+        return this.broadcast(packet);
     } else {
         return [];
     }
