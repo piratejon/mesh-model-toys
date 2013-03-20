@@ -35,6 +35,10 @@ var meshpath = (function () {
         this.toString = function () {
             return '(' + this.x + ',' + this.y + ')';
         };
+
+        this.broadcast = function (packet) {
+            return this.qt === undefined ? [] : this.qt.broadcast(packet);
+        };
     }
 
     function randomIntRange(lower_bound, upper_bound) {

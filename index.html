@@ -17,10 +17,27 @@
       <div id="router">
         Define two functions here: <em>Point.initiate(dst_guid)</em> and <em>Point.receive(recipient_guid, packet)</em>. <em>initiate</em> is called in the context of the source node (with guid <em>this.guid</em>) when you click Find a Path. <em>receive</em> is called when a node receives a packet. Call <em>broadcast(packet)</em> to send a packet to all nodes in your radius. Define <em>packet</em> according to your imagination.
         <textarea id="evalme">Point.prototype.initiate = function(dst_guid) {
-          alert(dst_guid);
+    var packet = {};
+    packet.src = this.guid;
+    packet.dst = dst_guid;
+    // packet.route = [];
+    // packet.route.push(this.guid);
+    packet.route_length = 0;
+    return packet;
 };
 
-Point.prototype.initiate = function(packet) {
+Point.prototype.receive = function(packet) {
+    if (this.guid === packet.dst) {
+        console.log("FOUND ME!!! Route:" + packet.route_length);
+        return [];
+    } else if (this.shortest_route === undefined || packet.route_length < this.shortest_route) {
+        // packet.route.push(this.guid);
+        packet.route_length += 1;
+        this.shortest_route = packet.route_length;
+        return this.qt.broadcast(packet);
+    } else {
+        return [];
+    }
 };
 </textarea>
       </div>
