@@ -291,14 +291,14 @@ var meshpath = (function () {
 
     function wagumba() {
         if (G.src && G.dst) {
-            var packet, current_events, new_events, i;
+            var packet, current_events, new_events, i, property, new_packet;
             eval(document.getElementById('evalme').value);
             packet = G.src.pt.initiate(G.dst.pt.guid);
             current_events = G.src.broadcast(packet);
             while (current_events.length > 0) {
                 new_events = [];
                 for (i = 0; i < current_events.length; i += 1) {
-                    new_events.push.apply(new_events, current_events[i].dst.pt.receive(current_events[i].packet));
+                    new_events.push.apply(new_events, current_events[i].dst.pt.receive(current_events[i].packet.copy()));
                 }
                 current_events = new_events;
             }
