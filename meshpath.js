@@ -250,12 +250,28 @@ var meshpath = (function () {
         }
     }
 
+    function canvas_move(e) {
+        if (G.quadtree) {
+            var coords, closest_point;
+
+            coords = G.canvas.relMouseCoords(e);
+            closest_point = G.quadtree.nearest_neighbor(new Node(coords.x, coords.y));
+
+            if (closest_point !== undefined) {
+                G.cur_node.innerHTML = closest_point.qt.toString();
+            }
+        } else {
+            G.cur_node.innerHTML = '(none)';
+        }
+    }
+
     function create_canvas(width, height) {
         var canvas = document.createElement('canvas');
         canvas.setAttribute('id', 'map');
         canvas.setAttribute('width', width);
         canvas.setAttribute('height', height);
         canvas.addEventListener('click', function (e) { canvas_click(e); }, false);
+        canvas.addEventListener('mousemove', function (e) { canvas_move(e); }, false);
         return canvas;
     }
 
@@ -272,6 +288,7 @@ var meshpath = (function () {
         G.src = G.dst = null;
         G.src_node = document.getElementById('src');
         G.dst_node = document.getElementById('dst');
+        G.cur_node = document.getElementById('cur');
     }
 
     function draw_quadtree(qt) {
