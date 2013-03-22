@@ -4,7 +4,7 @@
 var meshpath = (function () {
     "use strict";
 
-    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR, NEIGHBOR_COLOR, DEFAULT_RADIUS;
+    var G, NORMAL_COLOR, SOURCE_COLOR, DEST_COLOR, NEIGHBOR_COLOR, DEFAULT_RADIUS, logtome;
 
     NORMAL_COLOR = '#0000ff';
     SOURCE_COLOR = '#00ff00';
@@ -15,6 +15,11 @@ var meshpath = (function () {
     function ReceiveEvent(dst, packet) {
         this.dst = dst;
         this.packet = packet;
+    }
+
+    function log(s) {
+        G.logtome.value += s + '\n';
+        G.logtome.scrollTop = G.logtome.scrollHeight;
     }
 
     function Node(x, y, color, radius) {
@@ -256,6 +261,7 @@ var meshpath = (function () {
 
     function init(x_dimension, y_dimension) {
         G = {};
+        G.logtome = document.getElementById('logtome');
         G.width = x_dimension;
         G.height = y_dimension;
         G.canvas = create_canvas(G.width, G.height);

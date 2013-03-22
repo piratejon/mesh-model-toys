@@ -39,7 +39,7 @@ Node.prototype.initiate = function(dst_guid) {
 Node.prototype.receive = function(packet) {
     if (this.guid === packet.dst) {
         packet.route.push(this.guid);
-        console.log("FOUND ME!!! Route:" + packet.route + "\n");
+        log("FOUND ME!!! Route:" + packet.route + "\n");
         return [];
     } else if (this.shortest_route === undefined || packet.route.length &lt; this.shortest_route) {
         packet.route.push(this.guid);
