@@ -15,6 +15,7 @@ Attribution
 Non-original code is reproduced in and distributed as part of this repository. See individual files for complete attribution information:
 * canvasclickcoords.js (http://stackoverflow.com/a/5932203)
 * guid.js (http://stackoverflow.com/a/2117523)
+* seedrandom-min.js (http://davidbau.com/archives/2010/01/30/random_seeds_coded_hints_and_quintillions.html)
 
 License
 =======
