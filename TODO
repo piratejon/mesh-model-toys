@@ -1,2 +1,10 @@
-Self-balancing quadtree (K-d trees)?
+TODO:
+Self-balancing quadtree (K-d trees?) or some kind of nice structure that lets us efficiently insert, move, and, find neighbors within a given radius -- right now it pretty much does a linear search :(
+Moar algorithms:
+  * Individual node building a map of the network
+    - possibly other nodes will be maintaining their own map and will update when you update and vice versa
+
+Save random seed so we can generate the same map
+
+DONE:
 Add properties defined by code defined by user form
