@@ -276,6 +276,8 @@ var meshpath = (function () {
     }
 
     function init(x_dimension, y_dimension) {
+        var seed = document.getElementById('seed_value').value;
+        Math.seedrandom(seed.toString());
         G = {};
         G.logtome = document.getElementById('logtome');
         G.width = x_dimension;
